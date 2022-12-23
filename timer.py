@@ -16,8 +16,6 @@ def update_text():
 		time_passed = time.time() - start_time
 
 		if time_passed > (current_interval * 60):
-			print(time_passed)
-			print(current_interval * 60)
 			timer_text = "00:00"
 		else: 
 			minutes_left = math.ceil(current_interval - 1 - time_passed / 60)
@@ -33,7 +31,7 @@ def update_text():
 		obs.obs_source_release(source)
 
 		# interval done, stop updating text
-		if not time_passed > (current_interval * 60 * 1000):
+		if not time_passed > (current_interval * 60):
 			obs.timer_remove(update_text)
 			obs.timer_add(update_text, 10)
 
