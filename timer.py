@@ -15,7 +15,9 @@ def update_text():
 	if source is not None:
 		time_passed = time.time() - start_time
 
-		if time_passed > (current_interval * 60 * 1000):
+		if time_passed > (current_interval * 60):
+			print(time_passed)
+			print(current_interval * 60)
 			timer_text = "00:00"
 		else: 
 			minutes_left = math.ceil(current_interval - 1 - time_passed / 60)
