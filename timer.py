@@ -12,8 +12,11 @@ interval_b = 0
 current_interval = 0
 sessions = 0
 current_session = 0
+auto_play = False
 
 def update_text_timer():
+	global interval_s
+	global interval_b
 	global source_name_timer
 	global state
 	global current_session
@@ -29,6 +32,13 @@ def update_text_timer():
 			if state == "Session":
 				current_session += 1
 				update_text_session()
+			if auto_play:
+				if current_interval == interval_s:
+					start_break_pressed(None, None)
+					return
+				else:
+					start_session_pressed(None, None)
+					return
 		else: 
 			minutes_left = math.ceil(current_interval - 1 - time_passed / 60)
 			seconds_left = (int) (60 - (time_passed % 60))
@@ -99,6 +109,13 @@ def start_break_pressed(props, prop):
 	current_interval = interval_b
 	start_timer()
 
+def auto_play_pressed(props, prop):
+	global auto_play
+
+	auto_play = not auto_play
+	if auto_play:
+		start_session_pressed(props, prop)
+
 def script_description():
 	return "A simple Pomodoro Timer for OBS.\n\nBy Jonas Kaspereit"
 
@@ -115,6 +132,7 @@ def script_properties():
 
 	obs.obs_properties_add_button(props, "start session button", "Start Session", start_session_pressed)
 	obs.obs_properties_add_button(props, "start break button", "Start Break", start_break_pressed)
+	obs.obs_properties_add_button(props, "auto play button", "Auto Play", auto_play_pressed)
 	return props
 
 def script_update(settings):
