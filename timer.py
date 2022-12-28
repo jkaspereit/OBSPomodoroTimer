@@ -28,6 +28,7 @@ def update_text_timer():
 		time_passed = time.time() - start_time
 
 		if time_passed > (current_interval * 60):
+			play_alert()
 			timer_text = "00:00"
 			if state == "Session":
 				current_session += 1
@@ -55,6 +56,20 @@ def update_text_timer():
 		# interval done, stop updating text
 		if not time_passed > (current_interval * 60):
 			obs.timer_add(update_text_timer, 10)
+
+def play_alert():
+    mediaSource = obs.obs_source_create_private(
+        "ffmpeg_source", "Global Media Source", None
+    )
+    data = obs.obs_data_create()
+    obs.obs_data_set_string(data, "local_file", "ADD YOUR SCRIPT PATH!!! alert.mp3")
+    obs.obs_source_update(mediaSource, data)
+    obs.obs_source_set_monitoring_type(
+		mediaSource, obs.OBS_MONITORING_TYPE_MONITOR_AND_OUTPUT
+	)
+    obs.obs_data_release(data)
+    obs.obs_set_output_source(63, mediaSource)
+    obs.obs_source_release(mediaSource)
 
 def update_text_session():
 	global source_name_session
